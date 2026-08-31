@@ -24,7 +24,7 @@ This repo is standalone (not PhaseLab / DMTD C#, not FemtoSyncTester). TDC RTL i
 
 ## Quick start (board already running)
 
-1. Confirm overlay: `http://<pitaya>:8080/api/health` → `"id":"TDC1"`, `"version":"0.1.0"`, `"tdc_base":"0x40700000"`.
+1. Confirm overlay: `http://rp-XXXXXX.local:8080/api/health` → `"id":"TDC1"`, `"version":"0.1.0"`, `"tdc_base":"0x40700000"`.
 2. Start **SCPI without** `systemctl start redpitaya_scpi` (that unit runs `overlay.sh v0.94` and **wipes this image**). On the board:
 
    ```sh
@@ -35,7 +35,7 @@ This repo is standalone (not PhaseLab / DMTD C#, not FemtoSyncTester). TDC RTL i
 3. On the PC:
 
    ```
-   python sw/monitor.py --url http://10.1.251.79:8080
+   python sw/monitor.py --url http://rp-XXXXXX.local:8080
    ```
 
    Mode **dmtd**, generator ON, **Apply**. Mixer IFs on IN1/IN2; square LO on OUT1 at `(f_osc + demod) / N`.
@@ -70,7 +70,7 @@ PitayaDelay/
 
 Read **[docs/GIT.md](docs/GIT.md)** before `git add`. Remove nested `fpga/RedPitaya-FPGA/.git`. Do not add Vivado `.srcs` / `out` / `.Xil` or `fpga/output/`. Commit **`fpga/releases/0.1.0/pitaya_delay.bit`**.
 
-`scripts/deploy.ps1` has lab defaults (IP, `root`/`root`, that board’s host key). Override with parameters for any other board.
+SSH factory default is `root` / `root`. Address the board as `rp-XXXXXX.local` (hostname on the sticker, last six MAC digits) or its IP. `scripts/deploy.ps1` requires `-HostName` and `-HostKey` (no board baked in).
 
 ## License / provenance
 

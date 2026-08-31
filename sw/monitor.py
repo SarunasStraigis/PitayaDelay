@@ -2,7 +2,7 @@
 """PC GUI to test PitayaDelay (DMTD / TDC / hybrid) over HTTP :8080.
 
   python sw/monitor.py
-  python sw/monitor.py --url http://10.1.251.79:8080
+  python sw/monitor.py --url http://rp-XXXXXX.local:8080
 """
 
 from __future__ import annotations
@@ -18,7 +18,7 @@ from tkinter import ttk, messagebox
 import urllib.error
 import urllib.request
 
-DEFAULT_URL = "http://10.1.251.79:8080"
+DEFAULT_URL = "http://rp-XXXXXX.local:8080"
 POLL_S = 0.4
 HIST_N = 80
 

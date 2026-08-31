@@ -1,6 +1,6 @@
 # Bring-up
 
-Target: STEMlab 125-14 on the LAN (example `10.1.251.79`, `root` / `root`). Overlay **is** analog v0.94 plus TDC; you do not restore stock v0.94 to use DMTD.
+Target: STEMlab 125-14 on the LAN. Factory SSH is `root` / `root`. Use `rp-XXXXXX.local` (sticker / MAC) or the board IP. Overlay **is** analog v0.94 plus TDC; you do not restore stock v0.94 to use DMTD.
 
 ## 1. Overlay image
 
@@ -8,7 +8,7 @@ Needs **Vivado 2020.1** only if you rebuild. A known-good bit is already in `fpg
 
 ```powershell
 cd <PitayaDelay>
-powershell -File scripts\deploy.ps1          # uses VERSION (0.1.0)
+powershell -File scripts\deploy.ps1 -HostName rp-XXXXXX.local -HostKey SHA256:...
 # powershell -File fpga\tcl\build.ps1        # rebuild scratch into fpga/output/
 # powershell -File scripts\release.ps1       # promote scratch to fpga/releases/<VERSION>/
 ```
@@ -17,10 +17,10 @@ If implementation reports a hair of negative WNS on AXI-XADC only, `fpga/tcl/wri
 
 ## 2. Deploy overlay + server
 
-From Windows (PuTTY `plink` / `pscp`). Edit `HostName` / host key / password in `scripts/deploy.ps1` if the board is not the lab default.
+From Windows (PuTTY `plink` / `pscp`). Pass **this** board’s hostname or IP and its SSH host key (`-HostName`, `-HostKey`). User/password default to factory `root` / `root`.
 
 ```powershell
-powershell -File scripts\deploy.ps1
+powershell -File scripts\deploy.ps1 -HostName rp-XXXXXX.local -HostKey SHA256:...
 ```
 
 That copies the versioned `.bit` (converted to `.bin`), `sw/*.py`, and `VERSION` to `/root/pitaya_delay`, loads the FPGA via sysfs, starts `server.py` on **:8080** (UDP **8081**).
@@ -28,7 +28,7 @@ That copies the versioned `.bit` (converted to `.bin`), `sw/*.py`, and `VERSION`
 Check:
 
 ```powershell
-Invoke-RestMethod http://10.1.251.79:8080/api/health
+Invoke-RestMethod http://rp-XXXXXX.local:8080/api/health
 ```
 
 Expect `ok=True`, `id=TDC1`, `version=0.1.0`, `tdc_base=0x40700000`. `valid` on TDC may be false until START/STOP pulses exist.
@@ -69,7 +69,7 @@ Cabling:
 PC GUI:
 
 ```powershell
-python sw\monitor.py --url http://10.1.251.79:8080
+python sw\monitor.py --url http://rp-XXXXXX.local:8080
 ```
 
 Set mode `dmtd`, N=5, demod 1000 Hz, f_osc 65e6, generator ON, FFT NCO, **Apply**.
@@ -77,7 +77,7 @@ Set mode `dmtd`, N=5, demod 1000 Hz, f_osc 65e6, generator ON, FFT NCO, **Apply*
 Or PowerShell:
 
 ```powershell
-$base = "http://10.1.251.79:8080"
+$base = "http://rp-XXXXXX.local:8080"
 Invoke-RestMethod -Method Put -Uri "$base/api/config" -ContentType "application/json" -Body (@{
   mode = "dmtd"; f_osc = 65e6; harmonic = 5; demod_hz = 1e3
   out_ch = 1; volt = 1.0; gen_enable = $true; use_fft = $true; zero = $false

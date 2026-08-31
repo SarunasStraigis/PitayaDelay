@@ -1,17 +1,25 @@
-# Deploy a versioned overlay + server to a STEMlab (default 10.1.251.79).
-# Requires PuTTY plink/pscp.
-#   powershell -File scripts\deploy.ps1
-#   powershell -File scripts\deploy.ps1 -Version 0.1.0
+# Deploy a versioned overlay + server to a STEMlab.
+# Requires PuTTY plink/pscp. Factory SSH is root/root; pass the board hostname
+# (rp-XXXXXX.local from the sticker/MAC) or its IP, and that host's key.
+#
+#   powershell -File scripts\deploy.ps1 -HostName rp-XXXXXX.local -HostKey SHA256:...
+#   powershell -File scripts\deploy.ps1 -HostName rp-XXXXXX.local -HostKey SHA256:... -Version 0.1.0
 
 param(
-    [string]$HostName = "10.1.251.79",
+    [Parameter(Mandatory = $true)]
+    [string]$HostName,
     [string]$User = "root",
     [string]$Password = "root",
-    [string]$HostKey = "SHA256:eznXsX+n6Gt4L6zNjUeAIsfpnDm1tHgig4Opmw1whKs",
+    [Parameter(Mandatory = $true)]
+    [string]$HostKey,
     [string]$Version = ""
 )
 
 $ErrorActionPreference = "Stop"
+if ($HostName -match 'X{2,}' -or $HostName -eq "rp-XXXXXX.local") {
+    throw "Replace rp-XXXXXX.local with this board's hostname or IP (sticker / ifconfig)."
+}
+
 $Repo = Split-Path -Parent $PSScriptRoot
 if (-not $Version) {
     $Version = (Get-Content (Join-Path $Repo "VERSION") -Raw).Trim().Split("`n")[0].Trim()

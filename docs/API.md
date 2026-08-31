@@ -1,6 +1,6 @@
 # PitayaDelay API
 
-Base URL: `http://<pitaya>:8080`. UDP **8081**: send any datagram; the reply is the same JSON as `GET /api/latest`.
+Base URL: `http://rp-XXXXXX.local:8080` (or the board IP). UDP **8081**: send any datagram; the reply is the same JSON as `GET /api/latest`.
 
 CORS: `OPTIONS` allowed (`GET`, `PUT`, `POST`).
 

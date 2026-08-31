@@ -39,7 +39,7 @@ Do not also run `tdc_server.py` on 8080 (same ports, old FemtoSyncTester app).
 
 ```powershell
 python sw\monitor.py
-python sw\monitor.py --url http://10.1.251.79:8080
+python sw\monitor.py --url http://rp-XXXXXX.local:8080
 ```
 
 Polls `/api/health`, `/api/config`, `/api/latest`. Status line includes **version**. **Apply** PUTs config (mode, f_osc, N, demod, volt, OUT channel, generator, FFT NCO). **Zero** sets `zero: true`.
@@ -48,7 +48,7 @@ Polls `/api/health`, `/api/config`, `/api/latest`. Status line includes **versio
 
 | Script | What it does |
 | --- | --- |
-| `scripts/deploy.ps1` | Converts `fpga/releases/<VERSION>/pitaya_delay.bit`, `pscp` bin + `sw/*.py` + `VERSION`. `-Version` override. Defaults: host `10.1.251.79`, `root`/`root`, lab host key. |
+| `scripts/deploy.ps1` | Converts `fpga/releases/<VERSION>/pitaya_delay.bit`, `pscp` bin + `sw/*.py` + `VERSION`. Requires `-HostName` and `-HostKey`. SSH defaults: `root` / `root`. |
 | `scripts/release.ps1` | Copy scratch `fpga/output/*.bit` → `fpga/releases/<VERSION>/` + SHA256. |
 | `scripts/remote_install.sh` | Firmware load, start `server.py`, **nohup** `scpi-server` (prefer `start_scpi.sh` after). **Does not** `systemctl start redpitaya_scpi`. |
 | `scripts/load_overlay.sh` | Copy `.bin` to `/lib/firmware`, fpga_manager, check TDC ID. |

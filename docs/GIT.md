@@ -38,9 +38,9 @@ Do **not** commit:
 - **`fpga/releases/0.1.0/`** (`pitaya_delay.bit` + `SHA256SUMS` + `VERSION`) — not `fpga/output/`
 - `VERSION`, `CHANGELOG.md`
 
-## Secrets / lab defaults
+## SSH / board address
 
-`scripts/deploy.ps1` contains the lab STEMlab IP, **root/root**, and that board’s SSH host key. That is the factory Red Pitaya password, not a personal token, but **edit it** for any other board before you share the script, or pass `-HostName` / `-Password` / `-HostKey` on the command line.
+Factory credentials are `root` / `root`. Examples use `rp-XXXXXX.local` (Red Pitaya mDNS; `XXXXXX` is the last six hex digits of the MAC, also on the sticker). A numeric IP works the same. `scripts/deploy.ps1` does **not** bake in a lab host; pass `-HostName` and `-HostKey`.
 
 Do not add `.env` files or extra credentials.
 
