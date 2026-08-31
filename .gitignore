@@ -1,0 +1,25 @@
+# Nested clone leftover (remove the directory before first commit; see docs/GIT.md)
+fpga/RedPitaya-FPGA/.git/
+
+# Vivado generated / local
+fpga/RedPitaya-FPGA/.Xil/
+fpga/RedPitaya-FPGA/prj/v0.94/out/
+fpga/RedPitaya-FPGA/prj/v0.94/sdk/
+fpga/RedPitaya-FPGA/prj/v0.94/.srcs/
+fpga/RedPitaya-FPGA/prj/v0.94/myproj/
+fpga/RedPitaya-FPGA/prj/v0.94/.Xil/
+fpga/RedPitaya-FPGA/*.jou
+fpga/RedPitaya-FPGA/*.log
+fpga/RedPitaya-FPGA/vivado*.str
+fpga/RedPitaya-FPGA/usage_statistics_webtalk.*
+fpga/RedPitaya-FPGA/tight_setup_hold_pins.txt
+*.dcp
+*.jou
+*.log
+.Xil/
+
+fpga/output/
+
+__pycache__/
+*.pyc
+.msCoverageSourceRootsMapping_*

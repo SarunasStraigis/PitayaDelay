@@ -1,0 +1,12 @@
+PitayaDelay combines:
+
+- Analog FPGA from Red Pitaya (RedPitaya/RedPitaya-FPGA, tag Release_2023.1),
+  vendored under fpga/RedPitaya-FPGA. Copyright Red Pitaya; see comments in
+  those sources. PID is stubbed and the analog EQ is a passthrough in this tree.
+- Carry-chain TDC RTL and poll/Nutt software copied from FemtoSyncTester and
+  remapped from 0x40000000 to 0x40700000.
+- Combined measurement server, PC monitor, deploy scripts, and documentation
+  in this repository.
+
+Do not treat stock overlay.sh v0.94 or systemd unit redpitaya_scpi as compatible
+with the TDC image; they reload the analog-only bitstream.
