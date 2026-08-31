@@ -58,8 +58,8 @@ After reboot: reload overlay, start `server.py`, then `start_scpi.sh`.
 
 ## Lock-in notes
 
-- `use_fft: true` (default): NCO frequency is the IN1 FFT peak near the expected beat. A few ppm between RF and Pitaya DAC shows up as beat ≈ 1.16 kHz instead of 1.000 kHz — that is expected; the FFT is supposed to follow.
-- `zero`: first healthy burst (mag/rms ≳ 0.05 on both channels) becomes 0 ps, still wrapped to ±½ RF cycle.
+- `use_fft: true` (default): NCO frequency is the IN1 FFT peak near the expected beat. A few ppm between RF and Pitaya DAC shifts the IF; the FFT is supposed to follow.
+- `zero`: first healthy burst (mag/rms ≳ 0.05 on both channels) becomes 0 ps, still wrapped to ±½ RF period.
 - Worker reconnects SCPI if the socket dies (`dmtd_error` on `/api/latest` and `/api/health`).
 
 ## Optional web stub

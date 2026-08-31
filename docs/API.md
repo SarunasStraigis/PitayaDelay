@@ -34,10 +34,10 @@ If `id` is not `TDC1`, the combined overlay is not loaded (usually stock `v0.94`
 | Field | Default | Notes |
 | --- | --- | --- |
 | `mode` | `tdc` | `tdc` \| `dmtd` \| `hybrid` |
-| `f_osc` | 65e6 | RF for DMTD scale and hybrid unwrap (Hz) |
-| `f_pick` | 100e3 | TTL pick rate; `ratio_near_integer` if `f_osc/f_pick` ≈ integer (±0.02) |
-| `harmonic` | 5 | Square LO = `(f_osc + demod_hz) / N` |
-| `demod_hz` | 1e3 | Target mixer IF / lock-in beat |
+| `f_osc` | 65e6 | **Example default.** Your RF (Hz); scales DMTD phase → delay and hybrid unwrap |
+| `f_pick` | 100e3 | **Example default.** TTL pick rate; hybrid prefers `f_osc / f_pick` near an integer |
+| `harmonic` | 5 | Square LO = `(f_osc + demod_hz) / N` (N is this field) |
+| `demod_hz` | 1e3 | **Example default.** Target mixer IF / lock-in beat |
 | `out_ch` | 1 | ASG channel 1 or 2 |
 | `volt` | 1.0 | Square peak (V) |
 | `dec` | `null` (auto) | Scope decimation; `"auto"` clears |
@@ -50,7 +50,7 @@ If `id` is not `TDC1`, the combined overlay is not loaded (usually stock `v0.94`
 
 `lo_hz` must be in (0, 50 MHz). Invalid JSON or values → HTTP 400 `{ "error": "..." }`.
 
-Example:
+Example (set `f_osc` / `harmonic` / `demod_hz` to the bench; these numbers are only a starting point):
 
 ```json
 {

@@ -1,22 +1,27 @@
 # PitayaDelay
 
-One **STEMlab 125-14** FPGA overlay and **one HTTP/UDP API** for a hybrid delay measurement:
+A **STEMlab 125-14** delay meter: **femtosecond-class precision** from analog DMTD, and a **wide unambiguous range** from TTL timestamps. One FPGA overlay, one HTTP/UDP API.
 
-| Instrument | Role | Signals |
-| --- | --- | --- |
-| Analog DMTD | Fine delay (phase inside one RF cycle) | 65 MHz oscillator and 65 MHz pulse-picked amp → mixers → **IN1 / IN2** |
-| Carry-chain TDC | Coarse interval (which RF cycle) | 100 kHz picks → TTL **START / STOP** on E1 (default DIO7_P / DIO7_N) |
+You compare two related signals (two clocks, a reference and a device under test, two arms of a splitter, …). DMTD reads the delay *inside one RF cycle* with a lock-in on mixer IFs. A carry-chain TDC reads Start→Stop on 3.3 V TTL and covers many cycles (microseconds, not one RF period). In **hybrid** mode the two are combined: TDC chooses the cycle, DMTD fills in the fraction.
 
-Each 65 MHz line is **coupled** to its 100 kHz pick (`f_osc / f_pick ≈ 650`). Hybrid unwrap uses TDC to pick the integer RF cycle and DMTD for the fraction. Modes: `tdc` | `dmtd` | `hybrid`.
+Frequencies are **configuration**, not hardware constants. The software defaults (65 MHz RF, 100 kHz picks, 1 kHz beat) are only examples.
 
-This repo is standalone. Analog FPGA is vendored Red Pitaya `v0.94` (`Release_2023.1`, Vivado **2020.1**). The TDC is a carry-chain interpolator on **sys[7] @ 0x40700000**.
+| Path | What it does |
+| --- | --- |
+| **DMTD** | Dual mixers + shared LO (splitter). Beat notes → Pitaya **IN1 / IN2**. Phase difference → delay wrapped to ±½ RF period, at lock-in precision. |
+| **TDC** | TTL **START / STOP** on E1 (default DIO7_P / DIO7_N). Carry-chain interpolator; range is large, precision coarser than DMTD. |
+| **Hybrid** | Same physical delay on analog and TTL (each RF coupled to its pick). Unwrap: integer cycles from TDC, fraction from DMTD. |
+
+Modes: `tdc` | `dmtd` | `hybrid`.
+
+Analog FPGA is vendored Red Pitaya `v0.94` (`Release_2023.1`, Vivado **2020.1**). The TDC sits on **sys[7] @ 0x40700000** so housekeeping and SCPI keep their stock map.
 
 | Doc | Contents |
 | --- | --- |
 | [docs/BRINGUP.md](docs/BRINGUP.md) | Load overlay, SCPI (safe), DMTD / TDC / hybrid tests |
 | [docs/API.md](docs/API.md) | REST/UDP, config, latest, pins, cal, unwrap |
 | [docs/FPGA.md](docs/FPGA.md) | Address map, GPIO, build, timing, what was stubbed |
-| [docs/ANALOG.md](docs/ANALOG.md) | Mixers, ADP-2-1W, LO formula, drift, expansion-board thermal |
+| [docs/ANALOG.md](docs/ANALOG.md) | What DMTD is, Pitaya I/O, coupling, drift |
 | [docs/SOFTWARE.md](docs/SOFTWARE.md) | On-board server, PC monitor, deploy scripts |
 | [docs/VERSIONING.md](docs/VERSIONING.md) | SemVer, `fpga/releases/<x.y.z>/`, git tags |
 | [docs/GIT.md](docs/GIT.md) | What to commit (first commit) |
@@ -38,7 +43,7 @@ This repo is standalone. Analog FPGA is vendored Red Pitaya `v0.94` (`Release_20
    python sw/monitor.py --url http://rp-XXXXXX.local:8080
    ```
 
-   Mode **dmtd**, generator ON, **Apply**. Mixer IFs on IN1/IN2; square LO on OUT1 at `(f_osc + demod) / N`.
+   Set **f_osc** to your RF, mode **dmtd**, generator ON, **Apply**. Mixer IFs on IN1/IN2; optional square LO on OUT1 at `(f_osc + demod) / N`.
 
 Fresh board: [docs/BRINGUP.md](docs/BRINGUP.md) (`scripts/deploy.ps1`).
 
@@ -60,11 +65,11 @@ PitayaDelay/
   rp_app/               minimal web stub (optional)
 ```
 
-## Hardware (defaults)
+## Hardware
 
 - Board: STEMlab **125-14** (xc7z010), OS 2.x with `fpga_manager`.
-- DMTD: external dual mixers, **Mini-Circuits ADP-2-1W** LO split, Pitaya **OUT1** square harmonic LO, IFs on **IN1/IN2** (LV).
-- TDC: E1 **pin 17** START (DIO7_P), **pin 18** STOP (DIO7_N), 3.3 V TTL, pulses ≳ 8–10 ns.
+- DMTD: external dual-mixer setup (two mixers, LO splitter, IFs into **IN1 / IN2**, LV). Optional LO from Pitaya **OUT1**.
+- TDC: E1 **pin 17** START (DIO7_P), **pin 18** STOP (DIO7_N) by default; 3.3 V TTL, pulses ≳ 8–10 ns.
 
 ## First git commit
 

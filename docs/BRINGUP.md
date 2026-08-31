@@ -62,8 +62,7 @@ Stop stock SCPI if it was started by mistake, then reload this overlay (`deploy.
 Cabling:
 
 - Mixer IFs → **IN1** and **IN2**, LV jumpers.
-- Square LO → **OUT1** (optional amp; keep the Pitaya/amp **linear**. Mixer **LO pins** should be hard-switched at **65 MHz**, see [ANALOG.md](ANALOG.md)).
-- Splitter (ADP-2-1W) on the LO to both mixers.
+- Shared LO into both mixers (splitter). Optional square from **OUT1**.
 - TDC cables not required.
 
 PC GUI:
@@ -72,9 +71,9 @@ PC GUI:
 python sw\monitor.py --url http://rp-XXXXXX.local:8080
 ```
 
-Set mode `dmtd`, N=5, demod 1000 Hz, f_osc 65e6, generator ON, FFT NCO, **Apply**.
+Mode `dmtd`, set **f_osc** to your RF (the GUI’s 65e6 is an example), choose N and demod so the IF is a convenient beat, generator ON, FFT NCO, **Apply**.
 
-Or PowerShell:
+Or PowerShell (example numbers — change `f_osc` / `harmonic` / `demod_hz` to match the bench):
 
 ```powershell
 $base = "http://rp-XXXXXX.local:8080"
@@ -91,7 +90,7 @@ while ($true) {
 }
 ```
 
-**Healthy:** `valid` true, `dmtd_error` empty, `beat_hz` near 1 kHz (often ~1.16 kHz if clocks are a few ppm off — FFT NCO is supposed to follow), `mag_*` not tiny vs `rms_*`. `delay_ps` wraps to ±½ RF cycle (~±7.7 ns at 65 MHz).
+**Healthy:** `valid` true, `dmtd_error` empty, `beat_hz` near the requested demod (a few ppm of clock error shifts the beat — FFT NCO is supposed to follow), `mag_*` not tiny vs `rms_*`. `delay_ps` wraps to ±½ RF period.
 
 **Zero:** GUI **Zero**, or `PUT {"zero": true}`. The next healthy burst becomes 0 ps.
 
@@ -111,7 +110,7 @@ Invoke-RestMethod "$base/api/pins"
 
 ## 6. Test hybrid
 
-Same physical delay on analog and TTL (coupled 65 MHz + 100 kHz pairs). `PUT` `mode=hybrid` with the same DMTD generator fields. `GET /api/latest` should have `delay_ps` (unwrapped), raw `tdc_ps` / `dmtd_ps`, and `unwrap_slip` false on a static delay. Slip means lost coupling, missed TTL, or swapped pair — see [API.md](API.md).
+Same physical delay on analog and TTL (each RF coupled to its pick). `PUT` `mode=hybrid` with your DMTD fields (`f_osc` = RF, `f_pick` = TTL rate). `GET /api/latest` should have unwrapped `delay_ps`, raw `tdc_ps` / `dmtd_ps`, and `unwrap_slip` false on a static delay. Slip means lost coupling, missed TTL, or swapped pair — see [API.md](API.md).
 
 ## 7. After reboot
 
@@ -123,7 +122,7 @@ The PL may come up as stock v0.94. Load `pitaya_delay.bin` again (`deploy.ps1` o
 | --- | --- |
 | Health `id` not `TDC1` | Stock overlay loaded (`overlay.sh v0.94` / web SCPI) |
 | `dmtd_error` connection refused | SCPI not on :5000, or started then killed with SSH |
-| Tiny mag, nco stuck at 1000 Hz | No IF, wrong harmonic, LO too small at 65 MHz, saturation |
-| Fake ~15384 ps after zero | Wrap through ±180°; zero when not near the wrap |
+| Tiny mag, nco stuck at demod | No IF, wrong harmonic N, LO too small at the mixing frequency, saturation |
+| Jump of one RF period after zero | Wrap through ±180°; zero when not near the wrap |
 | TDC timeouts | Pulse too narrow, 5 V into 3.3 V, wrong E1 pins |
 | Monitor “Disconnected” | Server not on :8080; firewall; wrong IP |
