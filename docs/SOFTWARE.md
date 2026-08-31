@@ -18,7 +18,7 @@ python3 server.py --host 0.0.0.0 --port 8080 --udp-port 8081 --base 0x40700000
 
 Useful flags: `--sim` (no FPGA), `--cal-file /root/tdc/cal.json`, `--skew-ns`, `--mode dmtd`. Lock file `/tmp/pitaya_delay.server.lock`. Log: `/tmp/pitaya_delay.log`.
 
-Do not also run `tdc_server.py` on 8080 (same ports, old FemtoSyncTester app).
+Do not run a second process on :8080 (only one `server.py`).
 
 ## Modules
 

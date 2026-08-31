@@ -4,7 +4,7 @@ STEMlab **125-14** (xc7z010) analog **v0.94** plus a carry-chain TDC. Released i
 
 ## Why this map
 
-FemtoSyncTester put the TDC AXI slave at **0x40000000**. That is the stock **housekeeping** window, so SCPI could not map analog. This overlay keeps HK/OSC/ASG/AMS at stock addresses and hangs the TDC on **sys[7] @ 0x40700000** via `tdc_sys_bus` (AXI4-Lite wrapper around `tdc_axi`).
+Stock housekeeping sits at **0x40000000**. Putting the TDC there would collide with HK and break SCPI analog. This overlay keeps HK/OSC/ASG/AMS at stock addresses and hangs the TDC on **sys[7] @ 0x40700000** via `tdc_sys_bus` (AXI4-Lite wrapper around `tdc_axi`).
 
 | Bus | Address | Function |
 | --- | --- | --- |
@@ -17,7 +17,7 @@ FemtoSyncTester put the TDC AXI slave at **0x40000000**. That is the stock **hou
 | sys[6] | — | stub |
 | sys[7] | **0x40700000** | **TDC** (`ID = 0x54444331` = `TDC1`) |
 
-Software mmap is 4 KiB at `0x40700000`. Register layout is the FemtoSyncTester map (`sw/tdc_regs.py`).
+Software mmap is 4 KiB at `0x40700000`. Register layout is in `sw/tdc_regs.py`.
 
 ## GPIO / TDC pins
 

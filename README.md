@@ -9,7 +9,7 @@ One **STEMlab 125-14** FPGA overlay and **one HTTP/UDP API** for a hybrid delay 
 
 Each 65 MHz line is **coupled** to its 100 kHz pick (`f_osc / f_pick ≈ 650`). Hybrid unwrap uses TDC to pick the integer RF cycle and DMTD for the fraction. Modes: `tdc` | `dmtd` | `hybrid`.
 
-This repo is standalone (not PhaseLab / DMTD C#, not FemtoSyncTester). TDC RTL is copied from FemtoSyncTester; analog FPGA is vendored Red Pitaya `v0.94` (`Release_2023.1`, Vivado **2020.1**).
+This repo is standalone. Analog FPGA is vendored Red Pitaya `v0.94` (`Release_2023.1`, Vivado **2020.1**). The TDC is a carry-chain interpolator on **sys[7] @ 0x40700000**.
 
 | Doc | Contents |
 | --- | --- |
@@ -20,7 +20,7 @@ This repo is standalone (not PhaseLab / DMTD C#, not FemtoSyncTester). TDC RTL i
 | [docs/SOFTWARE.md](docs/SOFTWARE.md) | On-board server, PC monitor, deploy scripts |
 | [docs/VERSIONING.md](docs/VERSIONING.md) | SemVer, `fpga/releases/<x.y.z>/`, git tags |
 | [docs/GIT.md](docs/GIT.md) | What to commit (first commit) |
-| [NOTICE](NOTICE) | Provenance (Red Pitaya FPGA, FemtoSyncTester TDC) |
+| [NOTICE](NOTICE) | Provenance (Red Pitaya FPGA) |
 
 ## Quick start (board already running)
 
@@ -74,4 +74,4 @@ SSH factory default is `root` / `root`. Address the board as `rp-XXXXXX.local` (
 
 ## License / provenance
 
-See [NOTICE](NOTICE). Analog FPGA is [RedPitaya/RedPitaya-FPGA](https://github.com/RedPitaya/RedPitaya-FPGA) tag `Release_2023.1`. TDC interpolator and poll server come from FemtoSyncTester, remapped to **0x40700000**.
+See [NOTICE](NOTICE). Analog FPGA is [RedPitaya/RedPitaya-FPGA](https://github.com/RedPitaya/RedPitaya-FPGA) tag `Release_2023.1`. TDC and the measurement server live in this repository (TDC at **0x40700000**).
