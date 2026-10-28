@@ -29,8 +29,8 @@ Analog FPGA is vendored Red Pitaya `v0.94` (`Release_2023.1`, Vivado **2020.1**)
 
 ## Quick start (board already running)
 
-1. Confirm overlay: `http://rp-XXXXXX.local:8080/api/health` → `"id":"TDC1"`, `"version":"0.1.0"`, `"tdc_base":"0x40700000"`.
-2. Start **SCPI without** `systemctl start redpitaya_scpi` (that unit runs `overlay.sh v0.94` and **wipes this image**). On the board:
+1. Open the **Pitaya Delay** tile at `http://rp-XXXXXX.local/pitaya_delay/` (or the board IP). **Start** loads this overlay. Health through the tile is `http://rp-XXXXXX.local/pitaya_delay/api/health` → `"id":"TDC1"`, `"version":"0.1.0"`, `"tdc_base":"0x40700000"`. The same JSON is on port 8080: `http://rp-XXXXXX.local:8080/api/health`.
+2. **Start** on that page loads the overlay, starts the measurement server, and starts safe SCPI. Do not `systemctl start redpitaya_scpi` (that unit runs `overlay.sh v0.94` and **wipes this image**). Shell equivalent, on the board:
 
    ```sh
    sh scripts/start_scpi.sh
@@ -62,7 +62,7 @@ PitayaDelay/
     RedPitaya-FPGA/     vendored v0.94 + our top/TDC patches
   sw/                   server, lock-in, hybrid unwrap, PC GUI
   scripts/              deploy, overlay load, safe SCPI, release.ps1
-  rp_app/               minimal web stub (optional)
+  rp_app/               Red Pitaya menu app (Pitaya Delay tile)
 ```
 
 ## Hardware

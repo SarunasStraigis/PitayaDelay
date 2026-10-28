@@ -27,10 +27,5 @@ cd /root/pitaya_delay
 nohup python3 server.py --host 0.0.0.0 --port 8080 --udp-port 8081 --base 0x40700000 >/tmp/pitaya_delay.log 2>&1 &
 sleep 8
 python3 -c 'import urllib.request; print(urllib.request.urlopen("http://127.0.0.1:8080/api/health",timeout=5).read().decode())' || { echo "health failed"; cat /tmp/pitaya_delay.log; }
+# SCPI is started by rp_app/pitaya_delay/fpga.sh (pitaya-scpi-safe).
 # Do not systemctl start redpitaya_scpi — that unit runs overlay.sh v0.94 and wipes this image.
-export PATH_REDPITAYA=/opt/redpitaya
-export LD_LIBRARY_PATH=/opt/redpitaya/lib
-pkill -x scpi-server >/dev/null 2>&1 || true
-nohup /opt/redpitaya/bin/scpi-server >/tmp/scpi-server.log 2>&1 &
-sleep 0.5
-ss -lntp | grep 5000 || echo "SCPI not listening yet"

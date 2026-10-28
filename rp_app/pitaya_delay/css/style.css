@@ -1,0 +1,115 @@
+:root {
+  color-scheme: dark;
+  --bg: #121418;
+  --panel: #1c2128;
+  --text: #e7ecf1;
+  --muted: #9aa6b2;
+  --line: #2c343d;
+  --accent: #6dbe7a;
+  --danger: #e07a7a;
+  --button: #2a3340;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+header, .panel, .interval, .note {
+  margin: 1rem 1.25rem;
+}
+
+h1, h2 {
+  margin: 0 0 0.4rem;
+  font-weight: 600;
+}
+
+h1 { font-size: 1.35rem; }
+h2 { font-size: 0.95rem; color: var(--muted); }
+
+.hdr-row, .row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.75rem 1rem;
+}
+
+.status { margin: 0; color: var(--muted); flex: 1; }
+
+button, select, input[type="text"] {
+  background: var(--button);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.35rem 0.6rem;
+  font: inherit;
+}
+
+button { cursor: pointer; }
+button:disabled { opacity: 0.5; cursor: default; }
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+label.check {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4rem;
+  padding-bottom: 0.35rem;
+}
+
+input[type="text"] { width: 7rem; }
+#mode, #out_ch { width: auto; }
+
+.interval {
+  background: var(--panel);
+  border-radius: 8px;
+  padding: 1rem 1.1rem 0.6rem;
+}
+
+.label { color: var(--muted); font-size: 0.85rem; }
+
+.value {
+  font-family: Consolas, monospace;
+  font-size: 2.6rem;
+  line-height: 1.1;
+}
+
+.sub, .detail, .stats {
+  font-family: Consolas, monospace;
+  margin-top: 0.35rem;
+}
+
+.sub { font-size: 1rem; }
+.detail, .stats { color: var(--muted); font-size: 0.92rem; }
+.err { color: var(--danger); min-height: 1.2rem; margin-top: 0.35rem; }
+
+canvas {
+  width: 100%;
+  height: 120px;
+  margin-top: 0.6rem;
+  background: #101318;
+  border-radius: 4px;
+  display: block;
+}
+
+.panel {
+  background: var(--panel);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem 1rem;
+}
+
+.note {
+  color: var(--muted);
+  font-size: 0.85rem;
+  max-width: 52rem;
+}

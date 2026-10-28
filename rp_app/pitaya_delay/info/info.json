@@ -2,5 +2,5 @@
   "name": "Pitaya Delay",
   "version": "0.1.0",
   "revision": "0.1.0",
-  "description": "Combined TDC + DMTD delay on one overlay"
+  "description": "TDC, DMTD, and hybrid delay. Start loads this overlay; leaving the page keeps it running."
 }

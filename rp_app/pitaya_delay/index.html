@@ -1,46 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pitaya Delay</title>
-  <style>
-    body { font-family: sans-serif; margin: 1.5rem; background: #111; color: #eee; }
-    label { display: inline-block; min-width: 7rem; }
-    pre { background: #222; padding: 1rem; overflow: auto; }
-    button, select, input { margin: 0.2rem; }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <h1>Pitaya Delay</h1>
-  <p>
-    <label>mode</label>
-    <select id="mode">
-      <option>tdc</option>
-      <option>dmtd</option>
-      <option>hybrid</option>
-    </select>
-    <button id="apply">Apply</button>
-  </p>
-  <pre id="out">connecting…</pre>
-  <script>
-    const out = document.getElementById("out");
-    async function tick() {
-      try {
-        const r = await fetch("/api/latest");
-        out.textContent = JSON.stringify(await r.json(), null, 2);
-      } catch (e) {
-        out.textContent = String(e);
-      }
-    }
-    document.getElementById("apply").onclick = async () => {
-      await fetch("/api/config", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode: document.getElementById("mode").value })
-      });
-    };
-    setInterval(tick, 500);
-    tick();
-  </script>
+  <header>
+    <h1>Pitaya Delay</h1>
+    <div class="hdr-row">
+      <p class="status" id="status">Connecting…</p>
+      <div class="controls">
+        <button type="button" id="btnStart">Start</button>
+        <button type="button" id="btnStop">Stop</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="interval">
+    <div class="label">delay_ps</div>
+    <div class="value" id="delay">—</div>
+    <div class="sub" id="sub"></div>
+    <div class="detail" id="detail"></div>
+    <div class="stats" id="stats"></div>
+    <div class="err" id="err"></div>
+    <canvas id="trace" height="120"></canvas>
+  </section>
+
+  <section class="panel">
+    <h2>Config</h2>
+    <div class="row">
+      <label>mode
+        <select id="mode">
+          <option value="tdc">tdc</option>
+          <option value="dmtd">dmtd</option>
+          <option value="hybrid">hybrid</option>
+        </select>
+      </label>
+      <label>f_osc
+        <input id="f_osc" type="text" value="65e6" spellcheck="false">
+      </label>
+      <label>N
+        <input id="harmonic" type="text" value="5" spellcheck="false">
+      </label>
+      <label>demod Hz
+        <input id="demod" type="text" value="1000" spellcheck="false">
+      </label>
+    </div>
+    <div class="row">
+      <label>OUT
+        <select id="out_ch">
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
+      </label>
+      <label>Vpk
+        <input id="volt" type="text" value="1.0" spellcheck="false">
+      </label>
+      <label class="check"><input id="gen_enable" type="checkbox"> generator ON</label>
+      <label class="check"><input id="use_fft" type="checkbox" checked> FFT NCO</label>
+      <button type="button" id="btnApply">Apply</button>
+      <button type="button" id="btnZero">Zero</button>
+    </div>
+  </section>
+
+  <section class="panel" id="pinRow">
+    <h2>TDC pins</h2>
+    <div class="row">
+      <label>START
+        <select id="startPin"></select>
+      </label>
+      <label>STOP
+        <select id="stopPin"></select>
+      </label>
+    </div>
+  </section>
+
+  <p class="note">LO = (f_osc + demod) / N on OUT. Mixer IFs on IN1/IN2. Stop leaves this overlay loaded. The factory Remote control tile reloads stock v0.94.</p>
+  <script src="js/app.js"></script>
 </body>
 </html>
